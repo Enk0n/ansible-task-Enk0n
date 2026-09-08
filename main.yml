@@ -113,6 +113,14 @@
         owner: www-data
         group: www-data
         mode: "0640"
+    
+    - name: Create Ansible temporary directory for www-data
+      ansible.builtin.file:
+        path: /tmp/.ansible
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: "0700" 
 
     - name: Install PHP dependencies
       ansible.builtin.command:
