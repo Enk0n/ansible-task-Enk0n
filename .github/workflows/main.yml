@@ -16,6 +16,7 @@ jobs:
       DB_NAME: lrv
       DB_USER: lrv
       DB_PASS: ${{ secrets.GITHUB_TOKEN }}
+      COMPOSER_MEMORY_LIMIT: -1
 
     steps:
       - name: Checkout repository
@@ -23,6 +24,18 @@ jobs:
 
       - name: Update apt
         run: sudo apt update
+
+      - name: Install PHP and extensions
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y php php-cli php-xml php-mbstring php-zip php-curl php-intl php-mysql unzip git
+
+      - name: Install Composer
+        run: |
+          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+          php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+          php -r "unlink('composer-setup.php');"
+          composer --version
 
       - name: Install ufw
         run: sudo apt install ufw -y
