@@ -50,6 +50,9 @@
 - name: Configure Laravel web server
   hosts: server
   become: true
+  
+  vars:
+    ansible_remote_tmp: /tmp/.ansible
 
   tasks:
     - name: Install Apache, PHP and required packages
@@ -113,9 +116,11 @@
 
     - name: Install PHP dependencies
       ansible.builtin.command:
-        cmd: composer install --no-interaction --prefer-dist --optimize-autoloader
-        chdir: /var/www/app
+      cmd: composer install --no-interaction --prefer-dist --optimize-autoloader
+      chdir: /var/www/app
       become_user: www-data
+      environment:
+      COMPOSER_HOME: /tmp/composer
 
     - name: Generate Laravel application key
       ansible.builtin.command:
