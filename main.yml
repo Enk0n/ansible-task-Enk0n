@@ -58,6 +58,7 @@
       ansible.builtin.apt:
         name:
           - apache2
+          - libapache2-mod-php
           - php
           - php-cli
           - php-common
