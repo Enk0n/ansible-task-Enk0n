@@ -1,4 +1,3 @@
-```yaml 
 name: Tests
 
 on:
@@ -71,4 +70,3 @@ jobs:
             -D "$DB_NAME" \
             -p"$DB_PASS" \
             -e 'SHOW TABLES;' | grep users
-```
