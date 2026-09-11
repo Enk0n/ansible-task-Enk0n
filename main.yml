@@ -152,6 +152,12 @@
 
     - name: Clear Laravel caches
       ansible.builtin.command:
+        cmd: php artisan optimize:clear
+        chdir: /var/www/app
+      become_user: www-data
+
+    - name: Clear Laravel caches
+      ansible.builtin.command:
         cmd: php artisan cache:clear
         chdir: /var/www/app
       become_user: www-data
