@@ -124,7 +124,7 @@
 
     - name: Install PHP dependencies
       ansible.builtin.command:
-        cmd: composer install --no-interaction --prefer-dist --optimize-autoloader
+        cmd: composer install --no-interaction --prefer-dist --optimize-autoloader -vvv
         chdir: /var/www/app
       become_user: www-data
       environment:
