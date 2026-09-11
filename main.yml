@@ -151,13 +151,15 @@
 
     - name: Install frontend dependencies
       ansible.builtin.command:
-        cmd: npm install
+        cmd: npm install --no-audit --no-fund
         chdir: /var/www/app
+      become_user: www-data
 
     - name: Build frontend
       ansible.builtin.command:
         cmd: npm run build
         chdir: /var/www/app
+      become_user: www-data
 
     - name: Set ownership of Laravel application
       ansible.builtin.file:
