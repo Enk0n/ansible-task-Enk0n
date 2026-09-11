@@ -187,11 +187,22 @@
         path: /var/www/app/node_modules
         state: absent
 
+    - name: Create npm cache directory
+      ansible.builtin.file:
+        path: /tmp/npm-cache
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: "0700"
+
     - name: Install frontend dependencies
       ansible.builtin.command:
         cmd: npm ci --no-audit --no-fund
         chdir: /var/www/app
       become_user: www-data
+      environment:
+        npm_config_cache: /tmp/npm-cache
+      register: npm_install
       ignore_errors: true
 
     - name: Build frontend
@@ -199,6 +210,9 @@
         cmd: npm run build
         chdir: /var/www/app
       become_user: www-data
+      environment:
+        npm_config_cache: /tmp/npm-cache
+      register: npm_build
       ignore_errors: true
 
     - name: Check Vite build
@@ -206,7 +220,7 @@
         path: /var/www/app/public/build/manifest.json
       register: vite_manifest
 
-    - name: Fail if Vite manifest is missing
+    - name: Fail if Vite build is missing
       ansible.builtin.fail:
         msg: "Vite build failed: public/build/manifest.json was not created"
       when: not vite_manifest.stat.exists      
