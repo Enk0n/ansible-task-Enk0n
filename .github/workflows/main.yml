@@ -114,3 +114,11 @@ jobs:
             -D "$DB_NAME" \
             -p"$DB_PASS" \
             -e 'SHOW TABLES;' | grep users
+            
+      - name: Debug - Show Apache error logs
+        run: sudo tail -50 /var/log/apache2/laravel_error.log
+        if: always()
+
+      - name: Debug - Show Laravel storage logs
+        run: sudo find /var/www/app/storage/logs -name "*.log" -exec tail -50 {} +
+        if: always()
