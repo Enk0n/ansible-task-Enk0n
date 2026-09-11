@@ -106,6 +106,43 @@ jobs:
         with:
           working-directory: ./.github/tests
 
+      - name: Debug - Test PHP directly
+        run: |
+          cd /var/www/app
+          sudo -u www-data php -r "echo 'PHP works'; phpinfo();"
+        if: always()
+
+      - name: Debug - Check .env file
+        run: sudo cat /var/www/app/.env
+        if: always()
+
+      - name: Debug - List app directory
+        run: sudo ls -la /var/www/app/
+        if: always()
+
+      - name: Debug - Check Apache config
+        run: sudo apache2ctl configtest
+        if: always()
+
+      - name: Debug - Check Laravel routes
+        run: cd /var/www/app && sudo -u www-data php artisan route:list 2>&1 || true
+        if: always()
+
+      - name: Debug - Test Laravel app directly
+        run: |
+          curl -v http://localhost/login 2>&1 || echo "Failed to connect"
+        if: always()
+
+      - name: Debug - Check Apache/Laravel logs
+        run: |
+          echo "=== Apache Error Log ===" 
+          sudo tail -100 /var/log/apache2/laravel_error.log 2>&1 || echo "No error log"
+          echo "=== Apache Access Log ==="
+          sudo tail -20 /var/log/apache2/laravel_access.log 2>&1 || echo "No access log"
+          echo "=== Laravel Log ==="
+          sudo tail -100 /var/www/app/storage/logs/laravel.log 2>&1 || echo "No laravel log"
+        if: always()
+
       - name: Test if application uses MariaDB
         run: |
           sudo apt-get install mariadb-client -y
