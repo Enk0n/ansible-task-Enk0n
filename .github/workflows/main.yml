@@ -159,3 +159,8 @@ jobs:
       - name: Debug - Show Laravel storage logs
         run: sudo find /var/www/app/storage/logs -name "*.log" -exec tail -50 {} +
         if: always()
+            
+      - name: Show Laravel logs
+        if: always()
+        run: |
+          sudo tail -n 100 /var/www/app/storage/logs/laravel.log || true
