@@ -150,6 +150,32 @@
         chdir: /var/www/app
       become_user: www-data
 
+    - name: Clear Laravel caches
+      ansible.builtin.command:
+        cmd: php artisan cache:clear
+        chdir: /var/www/app
+      become_user: www-data
+      ignore_errors: true
+
+    - name: Clear Laravel config cache
+      ansible.builtin.command:
+        cmd: php artisan config:cache
+        chdir: /var/www/app
+      become_user: www-data
+      ignore_errors: true
+
+    - name: Set directory permissions
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: "0775"
+        recurse: true
+      loop:
+        - /var/www/app/storage
+        - /var/www/app/bootstrap/cache
+
     - name: Remove existing node_modules
       ansible.builtin.file:
         path: /var/www/app/node_modules
