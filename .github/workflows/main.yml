@@ -71,6 +71,34 @@ jobs:
             main.yml \
             -e "db_host=$DB_HOST db_name=$DB_NAME db_user=$DB_USER db_pass=$DB_PASS" \
             -c local
+            - name: Debug - Check .env file
+        run: sudo cat /var/www/app/.env || echo "No .env file found"
+        if: always()
+
+      - name: Debug - Check Laravel logs
+        run: sudo tail -100 /var/www/app/storage/logs/laravel.log || echo "No logs found"
+        if: always()
+
+      - name: Debug - Check PHP version
+        run: php -v
+
+      - name: Debug - Check Node/npm versions
+        run: |
+          node -v
+          npm -v
+
+      - name: Debug - List app directory
+        run: sudo ls -la /var/www/app/ || echo "Directory not found"
+
+      - name: Debug - Check database
+        run: |
+          sudo apt-get install mariadb-client -y
+          mysql -h "$DB_HOST" \
+            -u "$DB_USER" \
+            -D "$DB_NAME" \
+            -p"$DB_PASS" \
+            -e 'SHOW TABLES;' || echo "Database check failed"
+        if: always()
 
       - name: Test application
         uses: cypress-io/github-action@v6
