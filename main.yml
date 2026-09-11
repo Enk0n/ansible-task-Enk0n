@@ -52,7 +52,8 @@
   become: true
 
   vars:
-    ansible_remote_tmp: /tmp/.ansible
+    ansible_remote_tmp: /tmp
+    ansible_allow_world_readable_tmpfiles: true
 
   tasks:
     - name: Install Apache, PHP and required packages
@@ -120,7 +121,7 @@
         owner: www-data
         group: www-data
         mode: "0640"
-    
+     
     - name: Create Ansible temporary directory for www-data
       ansible.builtin.file:
         path: /tmp/.ansible
