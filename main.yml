@@ -201,6 +201,16 @@
       become_user: www-data
       ignore_errors: true
 
+    - name: Check Vite build
+      ansible.builtin.stat:
+        path: /var/www/app/public/build/manifest.json
+      register: vite_manifest
+
+    - name: Fail if Vite manifest is missing
+      ansible.builtin.fail:
+        msg: "Vite build failed: public/build/manifest.json was not created"
+      when: not vite_manifest.stat.exists      
+
     - name: Set ownership of Laravel application
       ansible.builtin.file:
         path: /var/www/app
