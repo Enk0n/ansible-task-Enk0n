@@ -127,11 +127,11 @@
         state: directory
         owner: www-data
         group: www-data
-        mode: "0700" 
+        mode: "0700"
 
     - name: Install PHP dependencies
       ansible.builtin.command:
-        cmd: composer install --no-interaction --prefer-dist --optimize-autoloader -vvv
+        cmd: composer install --no-interaction --prefer-dist --optimize-autoloader --no-progress
         chdir: /var/www/app
       become_user: www-data
       environment:
@@ -149,9 +149,14 @@
         chdir: /var/www/app
       become_user: www-data
 
+    - name: Remove existing node_modules
+      ansible.builtin.file:
+        path: /var/www/app/node_modules
+        state: absent
+
     - name: Install frontend dependencies
       ansible.builtin.command:
-        cmd: npm install --no-audit --no-fund
+        cmd: npm ci --no-audit --no-fund
         chdir: /var/www/app
       become_user: www-data
 
