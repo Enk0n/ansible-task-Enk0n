@@ -17,6 +17,8 @@ jobs:
       DB_USER: lrv
       DB_PASS: ${{ secrets.GITHUB_TOKEN }}
       COMPOSER_MEMORY_LIMIT: -1
+      ANSIBLE_REMOTE_TMP: /tmp
+      ANSIBLE_ALLOW_WORLD_READABLE_TMPFILES: "True"
 
     steps:
       - name: Checkout repository
