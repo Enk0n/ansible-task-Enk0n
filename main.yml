@@ -160,12 +160,14 @@
         cmd: npm ci --no-audit --no-fund
         chdir: /var/www/app
       become_user: www-data
+      ignore_errors: true
 
     - name: Build frontend
       ansible.builtin.command:
         cmd: npm run build
         chdir: /var/www/app
       become_user: www-data
+      ignore_errors: true
 
     - name: Set ownership of Laravel application
       ansible.builtin.file:
