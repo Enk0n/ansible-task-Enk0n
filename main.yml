@@ -105,6 +105,13 @@
         dest: /var/www/app
         version: main
         force: true
+    
+    - name: Set ownership of Laravel application
+      ansible.builtin.file:
+        path: /var/www/app
+        owner: www-data
+        group: www-data
+        recurse: true
 
     - name: Create Laravel .env file
       ansible.builtin.template:
